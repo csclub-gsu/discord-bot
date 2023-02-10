@@ -1,6 +1,6 @@
 # discord-bot
 
-## Project Outline: (Done in our 03-02-2023 Meeting)
+## Project Outline: (Done in our 02-03-2023 Meeting)
 
 **Goal: To have a bot that’s capable of marking attendance for meetings, sending event reminders, providing select role capabilities (for roles like those for CS classes, interest roles), etc.**
 
