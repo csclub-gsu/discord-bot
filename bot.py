@@ -6,7 +6,6 @@ with open('token.txt', 'r') as f:
     token = f.read()
     
 def run_bot():
-    token = 'token'
     intents = discord.Intents.all()
     client = discord.Client(intents=intents)
     @client.event
