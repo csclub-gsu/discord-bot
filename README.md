@@ -18,3 +18,6 @@ _What?_
 -	We would be able to see who on discord is doing a certain part of a project.
 -	Send out attendance links for every scheduled event.
 
+## Installation
+
+-   After you clone the repository, run the "pip install discord.py" in the terminal.
