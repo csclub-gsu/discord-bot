@@ -1,5 +1,14 @@
 import discord
+from discord.ext import commands
 import asyncio
+
+# Add emoji and role name for reaction role
+# We need to change the lines below to account for new roles with new emojis.
+reaction_data = {
+    '🟥': {'name': "Projecteers"},
+    '🟨': {'name': "Yellow"},
+    '🟦': {'name': "Blue"},
+}
 
 #read token.txt
 with open('token.txt', 'r') as f:
@@ -7,7 +16,8 @@ with open('token.txt', 'r') as f:
     
 def run_bot():
     intents = discord.Intents.all()
-    client = discord.Client(intents=intents)
+    client = commands.Bot(command_prefix="!", intents=intents)
+    
     @client.event
     async def on_ready():
         print('Logged in as')
@@ -26,18 +36,14 @@ def run_bot():
         message_id = payload.message_id
         if message_id == 1154104952063529102:
             guild_id = payload.guild_id
-            guild = discord.utils.find(lambda g: g.id == guild_id, client.guilds)
-
-            # We need to change the lines below to account for new roles with new emojis.
-            if payload.emoji.name == '🟥':
-                role = discord.utils.get(guild.roles, name="Projecteers")
-            elif payload.emoji.name == '🟨':
-                role = discord.utils.get(guild.roles, name="Yellow")
-            elif payload.emoji.name == '🟦':
-                role = discord.utils.get(guild.roles, name="Blue")
+            guild = client.get_guild(guild_id)
+            role = None
+            
+            if payload.emoji.name in reaction_data:
+                role = discord.utils.get(guild.roles, name=reaction_data[payload.emoji.name]['name'])
 
             if role is not None:
-                member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)            
+                member = guild.get_member(payload.user_id)            
                 if member is not None:
                     await member.add_roles(role)
                 else:
