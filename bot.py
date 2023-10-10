@@ -30,7 +30,7 @@ def run_bot():
     async def on_message(message):
         if message.channel.id == 1159522268364406905 and not message.author.bot:
             reaction = '⬆️'
-            await msg.add_reaction(reaction)
+            await message.add_reaction(reaction)
         elif message.content.startswith('hello'):
             msg = 'Hello {0.author.mention}'.format(message)
             await message.channel.send(msg)
