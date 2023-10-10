@@ -20,6 +20,7 @@ def run_bot():
     
     @client.event
     async def on_ready():
+        await client.tree.sync()
         print('Logged in as')
         print(client.user.name)
         print(client.user.id)
@@ -27,7 +28,7 @@ def run_bot():
 
     @client.event
     async def on_message(message):
-        if msg.channel.id == 1159522268364406905 and not msg.author.bot:
+        if message.channel.id == 1159522268364406905 and not message.author.bot:
             reaction = '⬆️'
             await msg.add_reaction(reaction)
         elif message.content.startswith('hello'):
