@@ -27,9 +27,29 @@ def run_bot():
 
     @client.event
     async def on_message(message):
-        if message.content.startswith('hello'):
+        if msg.channel.id == 1159522268364406905 and not msg.author.bot:
+            reaction = '⬆️'
+            await msg.add_reaction(reaction)
+        elif message.content.startswith('hello'):
             msg = 'Hello {0.author.mention}'.format(message)
             await message.channel.send(msg)
+    
+    @client.tree.command(name='event-ask', description='update messages by upvote')
+    async def event_ask(interaction:discord.Interaction):
+        messages = [message async for message in client.get_channel(1159522268364406905).history(limit=123)]
+        store_messages = []
+        for msg in messages:
+            count = 0
+            for reaction in msg.reactions:
+                if reaction.me: count+=reaction.count
+            store_messages.append([count, msg.content])
+        
+        for idx, msg in enumerate(sorted(store_messages, key=lambda x: x[0], reverse=True)):
+            store_messages[idx] = f'{idx}. {msg[1]} (votes: {msg[0]})'
+        
+        channel = client.get_channel(1161287625248866404)
+        await channel.send('\n'.join(store_messages))
+        await interaction.response.send_message("sent ✅") 
     
     @client.event
     async def on_raw_reaction_add(payload):
