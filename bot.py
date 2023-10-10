@@ -51,10 +51,27 @@ def run_bot():
             else: #Error handling? "UnboundLocalError: cannot access local variable 'role' where it is not associated with a value"
                 print("Role not found")
 
-    # Create the code to remove a role when a user unreacts to an emoji.
+    # When a user unreacts to an emoji remove the role
     @client.event
     async def on_raw_reaction_remove(payload):
-        pass
+        message_id = payload.message_id
+        if message_id == 1154104952063529102:
+            guild_id = payload.guild_id
+            guild = client.get_guild(guild_id)
+            role = None
+            
+            if payload.emoji.name in reaction_data:
+                role = discord.utils.get(guild.roles, name=reaction_data[payload.emoji.name]['name'])
+            
+            if role is not None:
+                member = guild.get_member(payload.user_id)          
+                if member is not None:
+                    await member.remove_roles(role)
+                else:
+                    print("Member not found")
+
+            else: #Error handling? "UnboundLocalError: cannot access local variable 'role' where it is not associated with a value"
+                print("Role not found")
 
 
 
