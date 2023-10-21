@@ -1,4 +1,4 @@
-import discord
 import bot
+import asyncio
 if __name__ == '__main__':
-    bot.run_bot()
+    asyncio.run(bot.run_bot())
