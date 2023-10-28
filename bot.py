@@ -35,7 +35,7 @@ async def on_scheduled_event_create(event:discord.ScheduledEvent):
     dtm = datetime(date.year, date.month, date.day, 10, 0, 0, 0, NYC)
     conn = sqlite3.connect("reminders.db")
     c = conn.cursor()
-    c.execute("INSERT INTO reminders (time, message, link) VALUES (?, ?, ?)", (dtm, event.name, event.url))
+    c.execute("INSERT INTO reminders (time, startDate, title, link) VALUES (?, ?, ?, ?)", (dtm, event.start_time, event.name, event.url))
     conn.commit()
     conn.close()
 
@@ -48,11 +48,12 @@ async def event_clock():
         c = conn.cursor()
         c.execute("SELECT * FROM reminders")
         results = c.fetchall()
-        for id, dtm, title, link in results:
-            if (event_datetime := datetime.strptime(dtm, '%Y-%m-%d %H:%M:%S%z')) and event_datetime  < datetime.now(NYC):
+        for id, trigger_datetime, start_datetime, title, link in results:
+            if datetime.strptime(trigger_datetime, '%Y-%m-%d %H:%M:%S%z') < datetime.now(NYC):
                 ch = client.get_channel(CONST_ID.EVENT_REMINDER_CHANNEL)
                 if ch:
-                    await ch.send(content=f"@everyone\n\nWe have our {title} event on {event_datetime.strftime('%B %d at %I:%M %p')}!\n\n{link}",)
+                    event_datetime = datetime.fromisoformat(start_datetime)
+                    await ch.send(content=f"@everyone\n\nWe have our {title} event on {event_datetime.astimezone(NYC).strftime('%B %d at %I:%M %p')}!\n\n{link}",)
                     c.execute("DELETE FROM reminders WHERE id = ?", (id,))
 
         conn.commit()

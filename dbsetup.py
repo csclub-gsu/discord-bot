@@ -8,7 +8,8 @@ def setup_db():
         CREATE TABLE IF NOT EXISTS reminders(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 time TIMESTAMP,
-                message TEXT,
+                startDate TIMESTAMP,
+                title TEXT,
                 link TEXT
         )
     """)
